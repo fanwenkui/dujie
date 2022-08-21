@@ -1,0 +1,15 @@
+.sticky-top { background: white; margin-bottom: 10px}
+.redskill { background: red; }
+.yellowskill { background: yellow; }
+.blueskill { background: blue; }
+.greenskill { background: green; }
+.line {width: 100%;height: 5px;background:#007bff;margin: 5% 0;}
+html{overflow-x:hidden;overflow-y:hidden;}
+.tableContainer {
+    overflow-y: auto;
+}
+
+thead.fixedHeader tr {
+    position: relative;
+    top: expression(document.getElementById("tableContainer").scrollTop);
+}
