@@ -15,9 +15,38 @@
     top: 0px;
     z-index: 1019;
 }
+html{
+    overflow: hidden;
+}
+.scroll-table{
+    overflow-y: auto;
+}
 .table-head{
     margin-bottom: 0px;
 }
 .center-td{
     vertical-align: middle !important;
 }
+.title{
+    text-align: center;
+    background: #007bff;
+}
+.my-table{
+    display: table;
+    width: 100%;
+}
+.my-cell{
+    display: table-cell;
+}
+.one,.two,.three,.four,.five{
+    width: 20%;
+}
+.jin{background: #f5e2a499}
+.mu{background: #d2f36299}
+.shui{background: #6ec2ea99}
+.huo{background: #ff7c8099}
+.tu{background: #7f5e4599}
+.lei{background: #d0e8ef99}
+.du{background: #792e8199}
+.success{background: #1e650499}
+.fail{background: #f7313199}
