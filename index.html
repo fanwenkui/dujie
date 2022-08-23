@@ -1,14 +1,13 @@
 <!doctype html>
-<html lang="zh" xmlns="http://www.w3.org/1999/html">
+<html lang="zh" xmlns="http://www.w3.org/1999/html" xmlns:v-clipboard="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/app.css??v1.2.0"/>
+    <link rel="stylesheet" href="css/app.css??v1.3.0"/>
     <script src="https://unpkg.com/vue@3"></script>
-<!--    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js?theme=grey&tracking=1&thirdparty=1&always=1&scrolling=1&remember=30"></script>-->
 </head>
 <body class="bg-dark text-light">
 <div id="app" class="container-fluid">
@@ -96,32 +95,73 @@
                 </div>
             </div>
             <div id="scroll" class="text-center scroll-table" :style="{height:scrollHeight+'px'}">
-                <div v-for="(value,key) in bossData">
+                <div v-for="value in bossData">
                     <div class="title">{{value.name}}</div>
                     <div v-for="item in value.data" class="my-table">
-                        <div class="my-cell one">{{computedWushang(item)}}</div>
-                        <div class="my-cell two">{{computedFaShang(item)}}</div>
-                        <div class="my-cell three" :class="item.type">{{computedTeShang(item)}}({{typeEnum[item.type]}})</div>
-                        <div class="my-cell four">{{computedZuiShang(item)}}</div>
-                        <div class="my-cell five" :class="isSuccess(item)">{{computedTongGuo(item)}}</div>
+                        <div class="my-cell width-20">{{computedWushang(item)}}</div>
+                        <div class="my-cell width-20">{{computedFaShang(item)}}</div>
+                        <div class="my-cell width-20" :class="item.type">{{computedTeShang(item)}}({{typeEnum[item.type]}})</div>
+                        <div class="my-cell width-20">{{computedZuiShang(item)}}</div>
+                        <div class="my-cell width-20" :class="isSuccess(item)">{{computedTongGuo(item)}}</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="tab-pane fade" id="data" role="tabpanel" aria-labelledby="data-tab">
-            <h3 class="redskill">还未完成添加功能,暂时只能编辑已有数据,先睡觉</h3>
-            <p>本页面编辑的数据只对本地生效，因为我也没钱买个服务器保存数据，除非游戏官方原因提供服务器接口让我获取各个关卡的数据。</p>
-            <p>可以通过导出功能，将本地数据复制出来，导入到另外的地方使用。比如放到群文件里，其他人可以复制该数据然后导入，即可使用。虽然麻烦点，但是没办法。</p>
+            <p>保存按钮-添加自定义数据后，需要点击保存才能生效（加入新boss后可以自己录入数据）</p>
+            <p>重置按钮-数据乱了以后，可以一键重置</p>
+            <p>导出按钮-可以将本地的boss数据一键复制到剪切板，包括你自己添加的boss数据</p>
+            <p>导入按钮-可以一键导入别人导出的数据（比如张三新增了boss，然后将导出的数据给你，你导入后也可以有新增的boss数据了）</p>
             <div class="line-box">
                 <div class="line"></div>
             </div>
-            <div v-for="(value,key) in bossData">
+            <div class="my-table">
+                <button type="button" class="btn btn-info mb-3 width-25" @click="saveData()">保存</button>
+                <button type="button" class="btn btn-info mb-3 width-25" @click="resetData()">重置</button>
+                <button type="button" class="btn btn-secondary mb-3 width-25" data-toggle="modal" data-target="#export-modal">导出</button>
+                <button type="button" class="btn btn-secondary mb-3 width-25" data-toggle="modal" data-target="#import-modal">导入</button>
+                <div class="modal fade" id="export-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title text-dark">导出数据</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea id="export-message" class="form-control mb-2" rows="10" :value="JSON.stringify(getClearData())"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="copy" type="button" class="btn btn-primary" data-clipboard-action="copy" data-clipboard-target="#export-message">复制数据</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title text-dark">导入数据</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <textarea id="import-message" class="form-control mb-2" rows="10" v-model="importStr"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="importData()">导入数据</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-for="(value,index) in bossData">
                 <div><input v-model.lazy.trim="value.name" class="form-control artlvl text-center" /></div>
                 <div v-for="item in value.data" class="my-table">
-                    <div class="my-cell one"><input v-model.lazy.trim="item.wu" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell two"><input v-model.lazy.trim="item.fa" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell three"><input v-model.lazy.trim="item.te" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell four">
+                    <div class="my-cell width-20"><input v-model.lazy.trim="item.wu" type="number" class="form-control artlvl text-center" /></div>
+                    <div class="my-cell width-20"><input v-model.lazy.trim="item.fa" type="number" class="form-control artlvl text-center" /></div>
+                    <div class="my-cell width-20"><input v-model.lazy.trim="item.te" type="number" class="form-control artlvl text-center" /></div>
+                    <div class="my-cell width-20">
                         <select v-model.lazy.trim="item.type" class="form-control artlvl text-center">
                             <option value="wu">无</option>
                             <option value="jin">金</option>
@@ -133,9 +173,9 @@
                             <option value="du">毒</option>
                         </select>
                     </div>
-                    <div class="my-cell five"><button type="button" class="btn btn-secondary my-btn" >+</button></div>
+                    <div class="my-cell width-20"><button type="button" class="btn btn-secondary my-btn" @click="addRow(value.data)">+</button></div>
                 </div>
-                <div class="my-table text-center"><button type="button" class="btn btn-info my-btn mb-3" >添加一组</button></div>
+                <div class="my-table text-center"><button type="button" class="btn btn-info my-btn mb-3" @click="addGroup(index)">添加一组</button></div>
             </div>
         </div>
         <div class="tab-pane fade" id="artifactab" role="tabpanel" aria-labelledby="artifacts-tab">
@@ -162,6 +202,6 @@
 
 <script src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/app.js?v1.2.0"></script>
+<script src="js/app.js?v1.3.0"></script>
 </body>
 </html>
