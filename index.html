@@ -6,7 +6,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/app.css??v1.3.0"/>
+    <link rel="stylesheet" href="css/app.css??v1.4.0"/>
     <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body class="bg-dark text-light">
@@ -175,7 +175,10 @@
                     </div>
                     <div class="my-cell width-20"><button type="button" class="btn btn-secondary my-btn" @click="addRow(value.data)">+</button></div>
                 </div>
-                <div class="my-table text-center"><button type="button" class="btn btn-info my-btn mb-3" @click="addGroup(index)">添加一组</button></div>
+                <div class="my-table text-center">
+                    <button type="button" class="btn btn-info width-50 mb-3 my-cell" @click="addGroup(index)">添加一组</button>
+                    <button type="button" class="btn btn-danger width-50 mb-3 my-cell" @click="delGroup(index)">删除一组</button>
+                </div>
             </div>
         </div>
         <div class="tab-pane fade" id="artifactab" role="tabpanel" aria-labelledby="artifacts-tab">
@@ -202,6 +205,6 @@
 
 <script src="js/jquery-3.2.1.slim.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/app.js?v1.3.0"></script>
+<script src="js/app.js?v1.4.0"></script>
 </body>
 </html>
