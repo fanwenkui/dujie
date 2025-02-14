@@ -1,210 +1,78 @@
-<!doctype html>
-<html lang="zh" xmlns="http://www.w3.org/1999/html" xmlns:v-clipboard="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="zh">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <title>情人节快乐</title>
+    <style>
+        body {
+            background: #ff3366;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/app.css??v1.5.1"/>
-    <script src="https://unpkg.com/vue@3"></script>
+        .container {
+            text-align: center;
+        }
+
+        .text {
+            font-family: 'Microsoft YaHei', sans-serif;
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hearts {
+            position: fixed;
+            top: -20px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
-<body class="bg-dark text-light">
-<div id="app" class="container-fluid">
-    <div id="nav" class="sticky-top border-bottom border-secondary bg-dark">
-        <ul class="nav nav-pills" id="navTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link text-light active" id="computed-tab" data-toggle="tab" href="#computed" role="tab"
-                   aria-controls="style" aria-selected="true">伤害计算</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light" id="data-tab" data-toggle="tab" href="#data" role="tab"
-                   aria-controls="style" aria-selected="true">数据维护</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light" id="artifacts-tab" data-toggle="tab" href="#artifactab" role="tab"
-                   aria-controls="artifactab" aria-selected="false">事件选项</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-light" id="log-tab" data-toggle="tab" href="#log" role="tab" aria-controls="log"
-                   aria-selected="false">更新日志</a>
-            </li>
-        </ul>
-        <h1 class="h4">渡劫伤害计算器（by 月檬） <span class="badge badge-secondary">{{version}}</span></h1>
+<body>
+    <div class="container">
+        <div class="text">❤️ 祝洋洋情人节快乐！ ❤️</div>
     </div>
-    <div class="tab-content" id="tabContent">
-        <div class="tab-pane fade show active" id="computed" role="tabpanel" aria-labelledby="computed-tab">
-            <div id="top">
-                <p>各百分比数值填写整数即可，无需转为小数。</p>
-                <p>比如金属性减免是15%，填入15即可。</p>
-                <table class="table table-striped table-sm table-dark table-head">
-                    <tbody>
-                    <tr>
-                        <th>金</th>
-                        <th>木</th>
-                        <th>水</th>
-                        <th>火</th>
-                        <th>土</th>
-                    </tr>
-                    <tr>
-                        <td><input v-model.lazy.trim="pro.jin" @focus="clearNum('jin',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.mu" @focus="clearNum('mu',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.shui" @focus="clearNum('shui',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.huo" @focus="clearNum('huo',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.tu" @focus="clearNum('tu',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                    </tr>
-                    <tr>
-                        <th>雷</th>
-                        <th>毒</th>
-                        <th>物减</th>
-                        <th>法减</th>
-                        <th>最终减</th>
-                    </tr>
-                    <tr>
-                        <td><input v-model.lazy.trim="pro.lei" @focus="clearNum('lei',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.du" @focus="clearNum('du',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.wuJian" @focus="clearNum('wuJian',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.faJian" @focus="clearNum('faJian',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.zuiZhong" @focus="clearNum('zuiZhong',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                    </tr>
-                    <tr>
-                        <th>修为</th>
-                        <th>体质</th>
-                        <th>物抗</th>
-                        <th>法抗</th>
-                        <th>可承伤</th>
-                    </tr>
-                    <tr>
-                        <td><input v-model.lazy.trim="pro.xiuWei" @focus="clearNum('xiuWei',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.tiZhi" @focus="clearNum('tiZhi',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.wuKang" @focus="clearNum('wuKang',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td><input v-model.lazy.trim="pro.faKang" @focus="clearNum('faKang',$event)" type="number" class="form-control artlvl" placeholder="0"></td>
-                        <td class="center-td">{{pro.tiZhi*50}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="line-box">
-                    <div class="line"></div>
-                </div>
-                <div class="my-table text-center">
-                    <div class="my-cell one">受到物伤</div>
-                    <div class="my-cell two">受到法伤</div>
-                    <div class="my-cell three">受到特伤</div>
-                    <div class="my-cell four">最终伤害</div>
-                    <div class="my-cell five">是否通过</div>
-                </div>
-            </div>
-            <div id="scroll" class="text-center scroll-table" :style="{height:scrollHeight+'px'}">
-                <div v-for="value in bossData">
-                    <div class="title">{{value.name}}</div>
-                    <div v-for="item in value.data" class="my-table">
-                        <div class="my-cell width-20">{{computedWushang(item)}}</div>
-                        <div class="my-cell width-20">{{computedFaShang(item)}}</div>
-                        <div class="my-cell width-20" :class="item.type">{{computedTeShang(item)}}({{typeEnum[item.type]}})</div>
-                        <div class="my-cell width-20">{{computedZuiShang(item)}}</div>
-                        <div class="my-cell width-20" :class="isSuccess(item)">{{computedTongGuo(item)}}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="data" role="tabpanel" aria-labelledby="data-tab">
-            <p>保存按钮-添加自定义数据后，需要点击保存才能生效（加入新boss后可以自己录入数据）</p>
-            <p>重置按钮-数据乱了以后，可以一键重置</p>
-            <p>导出按钮-可以将本地的boss数据一键复制到剪切板，包括你自己添加的boss数据</p>
-            <p>导入按钮-可以一键导入别人导出的数据（比如张三新增了boss，然后将导出的数据给你，你导入后也可以有新增的boss数据了）</p>
-            <div class="line-box">
-                <div class="line"></div>
-            </div>
-            <div class="my-table">
-                <button type="button" class="btn btn-info mb-3 width-25" @click="saveData()">保存</button>
-                <button type="button" class="btn btn-info mb-3 width-25" @click="resetData()">重置</button>
-                <button type="button" class="btn btn-secondary mb-3 width-25" data-toggle="modal" data-target="#export-modal">导出</button>
-                <button type="button" class="btn btn-secondary mb-3 width-25" data-toggle="modal" data-target="#import-modal">导入</button>
-                <div class="modal fade" id="export-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title text-dark">导出数据</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea id="export-message" class="form-control mb-2" rows="10" :value="JSON.stringify(getClearData())"></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button id="copy" type="button" class="btn btn-primary" data-clipboard-action="copy" data-clipboard-target="#export-message">复制数据</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="import-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title text-dark">导入数据</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            </div>
-                            <div class="modal-body">
-                                <textarea id="import-message" class="form-control mb-2" rows="10" v-model="importStr"></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="importData()">导入数据</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-for="(value,index) in bossData">
-                <div><input v-model.lazy.trim="value.name" class="form-control artlvl text-center" /></div>
-                <div v-for="item in value.data" class="my-table">
-                    <div class="my-cell width-20"><input v-model.lazy.trim="item.wu" type="number" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell width-20"><input v-model.lazy.trim="item.fa" type="number" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell width-20"><input v-model.lazy.trim="item.te" type="number" class="form-control artlvl text-center" /></div>
-                    <div class="my-cell width-20">
-                        <select v-model.lazy.trim="item.type" class="form-control artlvl text-center">
-                            <option value="wu">无</option>
-                            <option value="jin">金</option>
-                            <option value="mu">木</option>
-                            <option value="shui">水</option>
-                            <option value="huo">火</option>
-                            <option value="tu">土</option>
-                            <option value="lei">雷</option>
-                            <option value="du">毒</option>
-                        </select>
-                    </div>
-                    <div class="my-cell width-20"><button type="button" class="btn btn-secondary my-btn" @click="addRow(value.data)">+</button></div>
-                </div>
-                <div class="my-table text-center">
-                    <button type="button" class="btn btn-info width-50 mb-3 my-cell" @click="addGroup(index)">添加一组</button>
-                    <button type="button" class="btn btn-danger width-50 mb-3 my-cell" @click="delGroup(index)">删除一组</button>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="artifactab" role="tabpanel" aria-labelledby="artifacts-tab">
-            <p>敬请期待</p>
-        </div>
-        <div class="tab-pane fade" id="log" role="tabpanel" aria-labelledby="log-tab">
-            <table class="table table-striped table-sm table-dark">
-                <thead>
-                <tr>
-                    <th style="min-width: 90px;">日期</th>
-                    <th>内容</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(value,key) in log">
-                    <td>{{key}}</td>
-                    <td v-html="value"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
-<script src="js/jquery-3.2.1.slim.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/app.js?v1.5.2"></script>
+    <script>
+        // 创建爱心动画
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤';
+            heart.classList.add('hearts');
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+            
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // 定时生成爱心
+        setInterval(createHeart, 300);
+
+        // 点击页面生成爱心
+        document.addEventListener('click', createHeart);
+    </script>
 </body>
 </html>
